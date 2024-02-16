@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonInfoML", "PhotonInfoML\PhotonInfoML.csproj", "{5B2711D5-5630-454D-99B7-6CBF8AB3D2EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5B2711D5-5630-454D-99B7-6CBF8AB3D2EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B2711D5-5630-454D-99B7-6CBF8AB3D2EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B2711D5-5630-454D-99B7-6CBF8AB3D2EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B2711D5-5630-454D-99B7-6CBF8AB3D2EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7FCEE9D-4F27-4C30-B194-DCC20332B771}
+	EndGlobalSection
+EndGlobal
