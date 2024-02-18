@@ -5,6 +5,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using PhotonInfoML.Utils;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using System;
+using HarmonyLib;
+using Photon.Pun;
 
 [assembly: MelonInfo(typeof(PIML), "PhotonInfo", "0.2.0", "Luna")]
 [assembly: MelonGame("Another Axiom", "Gorilla Tag")]
@@ -28,14 +34,6 @@ namespace PhotonInfoML
         public override void OnFixedUpdate()
         {
             PhotonNetworkController.Instance.disableAFKKick = true;
-            GorillaLevelScreen[] levelScreens = GorillaComputer.instance.levelScreens;
-            for (int i = 0; i < levelScreens.Length; i++)
-            {
-                levelScreens[i].UpdateText($"RPCs EXECUTED: {rpcIn}\n" +
-                                           $"RPCs SENT: {rpcOut}\n" +
-                                           $"REPORTS SENT: {reportsSent}\n" +
-                                           $"DATA SENT: {outboundByteCount.ToSize(DataUtil.SizeUnits.KB)}KB | {outboundByteCount.ToSize(DataUtil.SizeUnits.MB)}MB", setToGoodMaterial: true);
-            }
 
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
@@ -48,6 +46,19 @@ namespace PhotonInfoML
 
                 }
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(CreditsView), "GetPage")]
+    static class ComputerPatch
+    {
+        static bool Prefix(CreditsView __instance, ref string __result)
+        {
+            __result = $"RPCs EXECUTED: {PIML.rpcIn}\n" +
+                       $"RPCs SENT: {PIML.rpcOut}\n" +
+                       $"REPORTS SENT: {PIML.reportsSent}\n" +
+                       $"DATA SENT: {PIML.outboundByteCount.ToSize(DataUtil.SizeUnits.KB)}KB | {PIML.outboundByteCount.ToSize(DataUtil.SizeUnits.MB)}MB";
+            return false;
         }
     }
 }
