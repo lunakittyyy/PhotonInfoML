@@ -11,6 +11,8 @@ using System.Text;
 using System;
 using HarmonyLib;
 using Photon.Pun;
+using ExitGames.Client.Photon;
+using System.Collections.Generic;
 
 [assembly: MelonInfo(typeof(PIML), "PhotonInfo", "0.2.0", "Luna")]
 [assembly: MelonGame("Another Axiom", "Gorilla Tag")]
@@ -21,15 +23,27 @@ namespace PhotonInfoML
     public class PIML : MelonMod
     {
         public static long rpcIn;
+        public static long eventIn;
         public static long rpcOut;
         public static long reportsSent;
         public static long outboundByteCount;
+        public static List<byte> eventCodesToIgnore = new List<byte> { 0, 1, 2, 3, 4, 5, 8, 9, 50, 51, 176, 199 };
 
         public override void OnLateInitializeMelon()
         {
             LoggerInstance.Msg("PhotonInfo is a diagnostic mod intended for monitoring networking events. It is only for developers. You will need to have some basic Photon networking knowledge to make use of its output.");
             UnityEngine.Object.FindObjectOfType<CinemachineBrain>().gameObject.SetActive(false);
-        }  
+            PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+        }
+
+        private void OnEvent(EventData photonEvent)
+        {
+            if (photonEvent.Code < 200 && !eventCodesToIgnore.Contains(photonEvent.Code)) // These event codes are either used by Photon or Gorilla Tag
+            {
+                eventIn++;
+                LoggerInstance.Msg($"EVENT - Event no. {photonEvent.Code} sent by {PhotonNetwork.CurrentRoom.GetPlayer(photonEvent.Sender).NickName}");
+            }
+        }
 
         public override void OnFixedUpdate()
         {
@@ -55,6 +69,7 @@ namespace PhotonInfoML
         static bool Prefix(CreditsView __instance, ref string __result)
         {
             __result = $"RPCs EXECUTED: {PIML.rpcIn}\n" +
+                       $"EVENTS RECIEVED: {PIML.eventIn}\n" +
                        $"RPCs SENT: {PIML.rpcOut}\n" +
                        $"REPORTS SENT: {PIML.reportsSent}\n" +
                        $"DATA SENT: {PIML.outboundByteCount.ToSize(DataUtil.SizeUnits.KB)}KB | {PIML.outboundByteCount.ToSize(DataUtil.SizeUnits.MB)}MB";
